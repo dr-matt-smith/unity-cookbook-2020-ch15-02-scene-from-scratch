@@ -1,94 +1,94 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en-us">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- These tags are needed for enabling experimental Chrome APIs via Chrome's Origin-Trial program (Android, Windows): https://github.com/GoogleChrome/OriginTrials/blob/gh-pages/available-trials.md#current-experimental-features -->
-    <!-- Origin Trial Token, feature = Generic Sensors, origin = https://github.io, expires = 2018-04-10 -->
-    <meta http-equiv="origin-trial" data-feature="Generic Sensors" data-expires="2018-04-10" content="Aokv0ODVMUPIswIBi6DnpAIjhWefEd8gD8GpVgdYgETj0C5+/3kKMzZE/FOrBwHcpBO6LHuVRrIw3yOT8EMmJAYAAABQeyJvcmlnaW4iOiJodHRwczovL2dpdGh1Yi5pbzo0NDMiLCJmZWF0dXJlIjoiR2VuZXJpY1NlbnNvciIsImV4cGlyeSI6MTUyMzMxODQwMH0=">
-    <!-- Origin Trial Token, feature = WebVR (For Chrome M62+), origin = https://github.io, expires = 2018-05-07 -->
-    <meta http-equiv="origin-trial" data-feature="WebXR (For Chrome M62+)" data-expires="2018-05-07" content="AgINztgDnjFV8da2D9SSzIITBRlHX8mduCR7DXfENxjr9ALduKOxBDdn2n66auQSlljVyhnRWWerxC0BWbE8pAoAAABOeyJvcmlnaW4iOiJodHRwczovL2dpdGh1Yi5pbzo0NDMiLCJmZWF0dXJlIjoiV2ViVlIxLjFNNjIiLCJleHBpcnkiOjE1MjU3MjU4MDh9">
-    <title>Sunny Desert | Unity-WebXR-Export</title>
-    <meta name="description" content="Complete interactive 3D scene demo made in Unity and exported to WebXR with the WebXR template of the Unity WebXR assets">
-    <meta name="color-scheme" content="normal" />
-    <link rel="icon" href="favicon.ico">
-    <link rel="manifest" href="manifest.webmanifest">
-    <link rel="stylesheet" type="text/css" href="styles/webxr.css">
-
-    <script src="lib/telemetry.js"></script>
-    <script>
-      MozillaResearch.telemetry.start({
-        analytics: true,
-        errorLogging: true,
-        performance: true
-      });
-      MozillaResearch.telemetry.performance.mark('LoaderParsingStart');
-    </script>
-
-    <script src="Build/UnityLoader.js"></script>
-    <script>
-        UnityLoader.SystemInfo.mobile = false;  // Workaround to force `UnityLoader` to actually load on mobile.
-        window.gameInstance = UnityLoader.instantiate('gameContainer', 'Build/docs.json', {
-          Module: {
-            // `preserveDrawingBuffer` is needed for WebVR content to be mirrored to the `<canvas>`.
-            webglContextAttributes: {
-              preserveDrawingBuffer: true
-            }
-          },
-          onProgress: unityProgress
-        });
-
-        function unityProgress (gameInstance, progress) {
-          if (!gameInstance.progress) {
-            gameInstance.loader = document.getElementById('loader');
-            gameInstance.progress = document.getElementById('progress');
-            gameInstance.loading = document.getElementById('loading');
-            document.dispatchEvent(new CustomEvent('UnityProgressStart'));
-          }
-          gameInstance.progress.style.width = (100 * progress) + '%';
-          if (progress === 1) {
-            document.dispatchEvent(new CustomEvent('UnityLoaded'));
-          }
-        }
-    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | Unity WebXR Export</title>
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
   </head>
   <body>
-    <div id="loader">
-      <div id="loading" class="loading">Loading</div>
-      <div id="progress" class="progress"></div>
-    </div>
-
-    <div id="game">
-      <div id="gameContainer"></div>
-    </div>
-
-    <div id="instruction">
-      <div id="novr" class="panel center">
-        <h3>You&rsquo;ll need a <a href="https://developer.mozilla.com/topics/mixed-reality/">WebXR-enabled browser</a> and VR headset to fully enjoy this experience.</h3>
-        <p><img src="mousedrag.png" width="70" alt="Click-and-drag your mouse"></p>
-        <p>In the meantime, <strong><em>click and drag</em></strong> to have a look around!</p>
-        <p>
-          <button class="confirm">Continue</button>
-        </p>
+    <div id="unity-container">
+      <div id="unity-canvas-container">
+        <canvas id="unity-canvas" style="width: 100%; height: 100%;"></canvas>
       </div>
-
-      <div id="nosecure" class="panel center">
-        <h3>You&rsquo;ll need a secure context (HTTPS or localhost) to execute WebXR applications.</h3>
-        <p><img src="mousedrag.png" width="70" alt="Click-and-drag your mouse"></p>
-        <p>In the meantime, <strong><em>click and drag</em></strong> to have a look around!</p>
-        <p>
-          <button class="confirm">Continue</button>
-        </p>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
       </div>
-
+      <div id="unity-footer">
+        <div id="unity-webgl-logo"></div>
+        <button id="entervr" value="Enter VR" disabled>VR</button>
+        <button id="enterar" value="Enter AR" disabled>AR</button>
+        <div id="unity-webxr-link">Using <a href="https://github.com/De-Panther/unity-webxr-export" target="_blank" title="WebXR Export">WebXR Export</a></div>
+        <div id="unity-build-title">Unity WebXR Export</div>
+      </div>
     </div>
+    <script>
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/docs.loader.js";
+      var config = {
+        dataUrl: buildUrl + "/docs.data",
+        frameworkUrl: buildUrl + "/docs.framework.js",
+        codeUrl: buildUrl + "/docs.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "De-Panther",
+        productName: "Unity WebXR Export",
+        productVersion: "0.1",
+      };
 
-    <button id="enterxr" value="Enter VR"></button>
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var canvasContainer = document.querySelector("#unity-canvas-container");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+      var unityInstance = null;
+      
 
-    <div id="performance" data-enabled="false"></div>
+      canvasContainer.style.width = "700px";
+      canvasContainer.style.height = "400px";
+      loadingBar.style.display = "block";
 
-    <script src="vendor/gl-matrix-min.js"></script>
-    <script src="webxr.js"></script>
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+        }).then((instance) => {
+          unityInstance = instance;
+          loadingBar.style.display = "none";
+          if (fullscreenButton)
+          {
+            fullscreenButton.onclick = () => {
+              unityInstance.SetFullscreen(1);
+            };
+          }
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+      document.body.appendChild(script);
+
+      let enterARButton = document.getElementById('enterar');
+      let enterVRButton = document.getElementById('entervr');
+
+      document.addEventListener('onARSupportedCheck', function (event) {
+        enterARButton.disabled = !event.detail.supported;
+      }, false);
+      document.addEventListener('onVRSupportedCheck', function (event) {
+        enterVRButton.disabled = !event.detail.supported;
+      }, false);
+
+      enterARButton.addEventListener('click', function (event) {
+        unityInstance.Module.WebXR.toggleAR();
+      }, false);
+      enterVRButton.addEventListener('click', function (event) {
+        unityInstance.Module.WebXR.toggleVR();
+      }, false);
+    </script>
   </body>
-
 </html>
